@@ -1,0 +1,66 @@
+[
+    { "index": "1", "class": "el-icon-s-grid", "title": "分类管理","userGroup":["0"] },
+    {
+      "index": "2",
+      "class": "el-icon-s-goods",
+      "title": "商品管理",
+      "userGroup":["0","1","2"],
+      "childs": [
+        { "index": "/main/commodity", "name": "商品管理" },
+        { "index": "/main/addCommodity", "name": "添加商品" }
+      ]
+    },
+    {
+      "index": "3",
+      "class": "el-icon-circle-plus",
+      "title": "进货管理",
+      "userGroup":["0","1","2"],
+      "childs": [
+        { "index": "/main/inventory", "name": "库存管理" },
+        { "index": "/main/addInventory", "name": "添加库存" }
+      ]
+    },
+    {
+      "index": "4",
+      "class": "el-icon-remove",
+      "title": "出货管理",
+      "userGroup":["0","1","2"],
+      "childs": [
+        { "index": "/main/MarketList", "name": "销售列表" },
+        { "index": "/main/OutCommodity", "name": "商品出库" },
+        { "index": "/main/SalesReturn", "name": "商品退货" }
+      ]
+    },
+    {
+      "index": "5",
+      "class": "el-icon-s-data",
+      "title": "统计管理",
+      "userGroup":["0"],
+      "childs": [
+        { "index": "/main/SalesStatistics", "name": "销售统计" },
+        { "index": "/main/StockStatistics", "name": "进货统计" }
+      ]
+    },
+    {
+      "index": "6",
+      "class": "el-icon-s-custom",
+      "title": "账号管理",
+      "userGroup":["0"],
+      "childs": [
+        { "index": "/main/accountManage", "name": "账号管理" },
+        { "index": "/main/addAccount", "name": "添加账号" },
+        { "index": "/main/editPassword", "name": "密码修改" }
+      ]
+    },
+    {
+      "index": "7",
+      "class": "el-icon-s-check",
+      "title": "会员管理",
+      "userGroup":["0","1"],
+      "childs": [
+        { "index": "/main/AccManage", "name": "账号管理" },
+        { "index": "/main/VipAddAcc", "name": "添加账号" }
+      ]
+    },
+    { "index": "8", "class": "el-icon-s-tools", "title": "系统管理" ,"userGroup":["0"]}
+  ]

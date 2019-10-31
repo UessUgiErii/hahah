@@ -24,13 +24,14 @@
 
         <el-form-item label="选择用户组">
           <el-select v-model="ruleForm.region" placeholder="请选择用户组">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option label="管理员" value="0"></el-option>
+            <el-option label="超级管理员" value="1"></el-option>
+            <el-option label="臭弟弟" value="2"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">添加</el-button>
+          <el-button type="primary" @click="submitForm(ruleForm)">添加</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -39,12 +40,13 @@
 </template>
 
 <script>
+import { addAccount } from "../../../api/apis";
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
       //字母 数字下划线8-16位
-      var reg = /^\w{8,16}$/;
-      console.log(reg.test(value));
+      var reg = /^\w{5,16}$/;
+      // console.log(reg.test(value));
       if (value === "") {
         callback(new Error("请输入用户名"));
       } else {
@@ -57,15 +59,15 @@ export default {
     };
     var validatePwd = (rule, value, callback) => {
       //字母 数字下划线8-16位
-      var reg = /^\w{8,16}$/;
-      console.log(reg.test(value));
+      var reg = /^\w{5,16}$/;
+      // console.log(reg.test(value));
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
         if (reg.test(value)) {
           callback();
         } else {
-          callback(new Error("密码是8-16位数字字母下划线"));
+          callback(new Error("密码是5-16位数字字母下划线"));
         }
       }
     };
@@ -85,7 +87,7 @@ export default {
         username: "", //新密码
         pwd: "", //原密码
         pwdex: "", //确认密码 两次输入的密码不一致
-        region: ""
+        region: "0" //下拉框
       },
       rules: {
         pwd: [
@@ -106,6 +108,38 @@ export default {
   methods: {
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    submitForm(val) {
+      // console.log(val)
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          addAccount(
+            this.ruleForm.username,
+            this.ruleForm.pwd,
+            this.ruleForm.region
+          ).then(res => {
+            if (res.data.code == 1) {
+              // alert("添加失败,用户名已存在!");
+              this.$message({
+                message: "添加失败,用户名已存在!",
+                type: "warning"
+              });
+            } else {
+              this.$message({
+                type: "success",
+                message: "添加用户成功!"
+              });
+              // alert("添加用户成功!");
+            }
+          });
+        } else {
+          // alert("添加失败!");
+          this.$message({
+            message: "添加失败!",
+            type: "warning"
+          });
+        }
+      });
     }
   }
 };

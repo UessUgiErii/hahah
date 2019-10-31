@@ -12,9 +12,9 @@
         label-width="70px"
         class="demo-ruleForm"
       >
-        <el-form-item label="用户名:" prop="name" clearable>
+        <el-form-item label="用户名:" prop="acc" clearable>
           <!-- 字母 数字下划线8-16位 -->
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.acc"></el-input>
         </el-form-item>
         <el-form-item label="密码:" prop="pwd">
           <!-- 字母 数字下划线8-16位 -->
@@ -31,15 +31,16 @@
 </template>
 
 <script>
+import { login } from "../api/apis";
 export default {
   created() {
-    console.log(this.$refs.ruleForm);
+    // console.log(this.$refs.ruleForm);
   },
   data() {
     var validatePass = (rule, value, callback) => {
       //字母 数字下划线8-16位
-      var reg = /^\w{8,16}$/;
-      console.log(reg.test(value));
+      var reg = /^\w{5,10}$/;
+      // console.log(reg.test(value));
       if (value === "") {
         callback(new Error("请输入用户名"));
       } else {
@@ -53,8 +54,8 @@ export default {
     var validatePwd = (rule, value, callback) => {
       // xxxx@xxx.xxx
       // var reg = /^\w{2,}@\w{2,}\.\w{2,3}$/;
-      var reg = /^\w{8,16}$/;
-      console.log(reg.test(value));
+      var reg = /^\w{5,16}$/;
+      // console.log(reg.test(value));
       if (value === "") {
         callback(new Error("请输入用密码"));
       } else {
@@ -66,12 +67,13 @@ export default {
       }
     };
     return {
+      error: false,
       ruleForm: {
-        name: "",
+        acc: "",
         pwd: ""
       },
       rules: {
-        name: [
+        acc: [
           // { required: true, message: "请输入用户名", trigger: "blur" },
           // { min: 3, max: 10, message: "长度在 3 到 5 个字符", trigger: "blur" }
           //自定义匹配规则
@@ -79,28 +81,48 @@ export default {
         ],
         pwd: [{ validator: validatePwd, trigger: "blur" }]
       },
-      img: require("../assets/images/超市.png")
+      img: require("../assets/images/超市.png"),
+      flag:true //登录防抖的标杆
     };
   },
   methods: {
     submitForm() {
       //验证函数
+      const _this = this;
       this.$refs.ruleForm.validate(valid => {
-        // if (valid) {
-        //   alert("submit!");
-        // } else {
-        //   console.log("error submit!!");
-        //   return false;
-        // }
-        // console.log(valid);
         if (valid) {
           //如果验证通过 发送请求给服务器
-          setTimeout(() => {
-            alert('登录成功!')
-            this.$router.push("/main/commodity");
-          }, 2000);
+          if(this.flag){
+
+            login(this.ruleForm.acc, this.ruleForm.pwd).then(res => {
+              console.log(res)
+              if (res.data.msg == "ok") {
+                localStorage.setItem("id", res.data.id);
+                localStorage.token = res.data.token
+                localStorage.acc = this.ruleForm.acc
+                localStorage.userGroup = res.data.userGroup
+                localStorage.avatarUrl = res.data.avatarUrl;  //保存用户头像
+                this.$router.replace("/main/commodity");
+              } else {
+                // alert("登录失败,请检查用户名或密码!");
+                this.$message({
+                  message: "登录失败,请检查用户名或密码!",
+                  type: "warning"
+                });
+                // this.error = true
+                this.flag = false 
+                setTimeout(()=>{
+                  this.flag = true
+                },3000)
+              }
+            });
+          }
         } else {
-          alert("用户名或密码错误");
+          // alert("用户名或密码错误!");
+          this.$message({
+            message: "用户名或密码错误!",
+            type: "warning"
+          });
         }
       });
     },
@@ -132,7 +154,6 @@ export default {
     }
     .colorF {
       color: #fff;
-      
     }
   }
 }

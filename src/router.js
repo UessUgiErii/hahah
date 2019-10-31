@@ -4,7 +4,7 @@ import VueRouter from 'vue-router';
 import Login from './pages/Login.vue'
 
 Vue.use(VueRouter);
-export default new VueRouter({
+var router =  new VueRouter({
     routes:[
         {   
             //登录
@@ -48,3 +48,4 @@ export default new VueRouter({
         }
     ]
 })
+export default  router
